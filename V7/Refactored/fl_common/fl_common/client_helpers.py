@@ -40,6 +40,7 @@ def read_common_config(context):
         "comm_size_ratio": float(cfg.get("comm-size-ratio", 1.0)),
         # Override taille modele POUR LA SIMULATION (en MB). 0 = vraie taille.
         "sim_model_mb": float(cfg.get("sim-model-mb", 0.0)),
+        "momentum": float(cfg.get("momentum", 0.9)),
     }
 
 
