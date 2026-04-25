@@ -17,7 +17,7 @@ from .metrics import class_accuracies_from_preds, macro_recall_f1_from_preds
 # 1) Entrainement local
 # ============================================================================
 
-def train(net, loader, epochs, lr, device, mu=0.0, global_params=None):
+def train(net, loader, epochs, lr, device, mu=0.0, global_params=None,momentum=0.9):
     """Entrainement multi-epoch SGD + momentum.
 
     Si mu > 0 et global_params fourni : ajoute le terme proximal FedProx
@@ -25,7 +25,7 @@ def train(net, loader, epochs, lr, device, mu=0.0, global_params=None):
     """
     net.to(device)
     crit = nn.CrossEntropyLoss().to(device)
-    opt = torch.optim.SGD(net.parameters(), lr=lr, momentum=0.9)
+    opt = torch.optim.SGD(net.parameters(), lr=lr, momentum=momentum)
     net.train()
 
     tot_loss, tot_ex, steps = 0.0, 0, 0
