@@ -58,7 +58,7 @@ def compute_tier_epochs(pid, base_epochs, epochs_hetero):
     if not epochs_hetero:
         return 1, base_epochs
     tier = pid % 3
-    epochs = {0: 1, 1: 5, 2: 15}[tier]   # ratio 15x (avant: 6x)
+    epochs = {0: 1, 1: 3, 2: 6}[tier]   # ratio 15x (avant: 6x)
     return tier, epochs
 
 
