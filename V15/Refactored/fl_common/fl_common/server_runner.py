@@ -116,9 +116,9 @@ def make_agg_train(round_info):
     """Cree le callback agg_train. round_info[0] sera rempli a chaque round."""
     def agg_train(records, wk):
         recs = list(records)
-        m = aggregate_metricrecords(recs, wk) if recs else {}
         details = [_client_metrics(rec) for rec in recs]
-
+        total_weight = sum(max(0, d["n"]) for d in details)
+        m = aggregate_metricrecords(recs, wk) if recs and total_weight > 0 else {}
         # Moyenne ponderee par num-examples (ignore les drops) pour local_loss/acc.
         active = [d for d in details if not d["dropped"] and d["n"] > 0]
         w = sum(d["n"] for d in active) or 1  # garde anti-/0
