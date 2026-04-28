@@ -1,0 +1,68 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "fairfed"
+version = "1.0.0"
+description = "FairFed (Ezzeldin et al. 2023, adapte) : reponderation vers le consensus"
+license = "Apache-2.0"
+dependencies = [
+    "fl_common>=1.0.0",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["fairfed"]
+
+[tool.flwr.app]
+publisher = "local"
+
+[tool.flwr.app.components]
+serverapp = "fairfed.server_app:app"
+clientapp = "fairfed.client_app:app"
+
+[tool.flwr.app.config]
+num-server-rounds = 10
+local-epochs = 2
+learning-rate = 0.01
+batch-size = 32
+num-clients = 10
+partitioning = "noniid"
+dirichlet-alpha = 0.3
+data-heterogeneity = 0
+epochs-heterogeneity = 0
+early-stopping-patience = 0
+early-stopping-min-delta = 0.001
+straggler-sim = 0
+round-deadline-s = 0.0
+comm-size-ratio = 1.0
+sim-model-mb = 0.0
+momentum = 0.9
+seed = -1
+# FairFed : strength de l'ajustement vers le consensus.
+# beta = 0   -> FedAvg
+# beta = 0.5 -> ajustement modere (recommande)
+# beta = 2.0 -> forte reponderation (peut destabiliser)
+fairfed-beta = 0.5
+
+
+#######################################################################
+# CONFIGURATION MIGRATION NOTICE:
+#
+# What was previously called "federation config" for SuperLink
+# connections in pyproject.toml has been renamed and moved.
+#
+# These settings are now **SuperLink connection configuration**
+# and are defined in the Flower configuration file.
+#
+# The entries below are commented out intentionally and are kept
+# only as a migration reference.
+#
+# Docs: https://flower.ai/docs/framework/ref-flower-configuration.html
+#######################################################################
+
+# [tool.flwr.federations]
+# default = "local-sim"
+
+# [tool.flwr.federations.local-sim]
+# options.num-supernodes = 10
