@@ -1,0 +1,57 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "befl"
+version = "1.0.0"
+description = "BEFL : Balancing Energy Consumption in FL for Mobile Edge IoT (adaptive epochs)"
+license = "Apache-2.0"
+dependencies = [
+    "fl_common>=1.0.0",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["befl"]
+
+[tool.flwr.app]
+publisher = "local"
+
+[tool.flwr.app.components]
+serverapp = "befl.server_app:app"
+clientapp = "befl.client_app:app"
+
+[tool.flwr.app.config]
+num-server-rounds = 10
+local-epochs = 2
+learning-rate = 0.01
+batch-size = 32
+num-clients = 10
+partitioning = "noniid"
+dirichlet-alpha = 0.3
+data-heterogeneity = 0
+epochs-heterogeneity = 0
+early-stopping-patience = 0
+early-stopping-min-delta = 0.001
+straggler-sim = 0
+round-deadline-s = 0.0
+comm-size-ratio = 1.0
+sim-model-mb = 0.0
+# Momentum SGD aligne sur 0.0 (theorie-correcte vanilla SGD) pour comparer
+# fairement avec FedNova / SCAFFOLD qui exigent momentum=0.
+momentum = 0.0
+seed = -1
+# BEFL : capacite batterie en Joules. 0 = unlimited (= FedAvg classique).
+# Avec base_epochs=2, ~10-15 rounds avant epuisement (varie selon le tier compute).
+befl-battery-j = 5000.0
+# BEFL : seuil sous lequel le client est mort (0.05 = 5% restant)
+befl-death-threshold = 0.05
+
+
+#######################################################################
+# CONFIGURATION MIGRATION NOTICE:
+#######################################################################
+# [tool.flwr.federations]
+# default = "local-sim"
+# [tool.flwr.federations.local-sim]
+# options.num-supernodes = 10
